@@ -15,7 +15,7 @@ If you are also interested in this, trae-todo (try to generate, heh!) an applica
 ## Screenshot(s)
 ![Windows 11 Desktop](Images/sshot01.png)
 ![Windows 11 Desktop](Images/sshot02.png)
-
+![Windows 10 Mobile](Images/sshot03.png)
 
 ## Status
 - I realized "Deepseek Free Chat" via OpenRouter "web-api service" =)
@@ -24,7 +24,7 @@ If you are also interested in this, trae-todo (try to generate, heh!) an applica
 
 ## Wiki
 I decided to share my dialogue with DeepSeek AI.. how to create Deepseek uwp app "template-prototype". ;)
-So, look at Wiki: https://github.com/mediaexplorer74/TraeTodo/wiki/
+So, look at Wiki: https://github.com/mediaexplorer74/TraeToDo/wiki/My-Dialogue-with-Trae-AI-about-Deepseek%E2%80%90like-project-autogeneration
 
 ## Known problems 
 - Deepseek can't remember previous posts (sometimes or all times… idk yet)
@@ -50,3 +50,5 @@ As is. No support. RnD only. DIY.
 
 ## .
 [m][e] June, 15 2025
+
+![Logo](Images/footer.png)
