@@ -11,6 +11,8 @@ namespace TraeToDo.Models
     {
         // Constants for settings keys
         private const string API_KEY_SETTING = "ApiKey";
+        private const string SOLO_MODE_ENABLED = "SoloModeEnabled";
+        private const string SOLO_MODE_INTERVAL = "SoloModeInterval";
         
         // Singleton instance
         private static SettingsManager _instance;
@@ -69,7 +71,51 @@ namespace TraeToDo.Models
         /// <returns>True if the API key is set, otherwise false</returns>
         public bool IsApiKeyConfigured()
         {
-            return !string.IsNullOrWhiteSpace(GetApiKey());
+            return !string.IsNullOrEmpty(GetApiKey());
+        }
+        
+        /// <summary>
+        /// Gets the SOLO mode enabled state
+        /// </summary>
+        /// <returns>True if SOLO mode is enabled</returns>
+        public bool GetSoloModeEnabled()
+        {
+            if (_localSettings.Values.ContainsKey(SOLO_MODE_ENABLED))
+            {
+                return (bool)_localSettings.Values[SOLO_MODE_ENABLED];
+            }
+            return false;
+        }
+        
+        /// <summary>
+        /// Saves the SOLO mode enabled state
+        /// </summary>
+        /// <param name="enabled">Whether SOLO mode is enabled</param>
+        public void SaveSoloModeEnabled(bool enabled)
+        {
+            _localSettings.Values[SOLO_MODE_ENABLED] = enabled;
+        }
+        
+        /// <summary>
+        /// Gets the SOLO mode interval in minutes
+        /// </summary>
+        /// <returns>The interval in minutes</returns>
+        public int GetSoloModeInterval()
+        {
+            if (_localSettings.Values.ContainsKey(SOLO_MODE_INTERVAL))
+            {
+                return (int)_localSettings.Values[SOLO_MODE_INTERVAL];
+            }
+            return 5; // Default interval
+        }
+        
+        /// <summary>
+        /// Saves the SOLO mode interval in minutes
+        /// </summary>
+        /// <param name="interval">The interval in minutes</param>
+        public void SaveSoloModeInterval(int interval)
+        {
+            _localSettings.Values[SOLO_MODE_INTERVAL] = interval;
         }
     }
 }

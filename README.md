@@ -1,4 +1,4 @@
-# TraeToDo 1.0.0 - main branch
+# TraeToDo 1.0.50 - main branch
 ![Logo](Images/logo.png)
 
 Experimental ai project... simplest "Deepseek-like" UWP app created with (in) Trae Ai service for my old sweet Windows Family devices! ;) 
@@ -18,7 +18,7 @@ If you are also interested in this, trae-todo (try to generate, heh!) an applica
 ![Windows 10 Mobile](Images/sshot03.png)
 
 ## Status
-- I realized "Deepseek Free Chat" via OpenRouter "web-api service" =)
+- I realized "Deepseek Free Chat" via OpenRouter "web-api service" ; experimental TODO AI-list feature started "for/to dev" :)
 - Min. Win. OS build - 15063 (however, 10240 may be good too!))
 - Draft / AI-generated proto / not for mainstream :)
 
@@ -49,6 +49,6 @@ So, look at Wiki: https://github.com/mediaexplorer74/TraeToDo/wiki/My-Dialogue-w
 As is. No support. RnD only. DIY.
 
 ## .
-[m][e] June, 15 2025
+[m][e] July, 2 2025
 
 ![Logo](Images/footer.png)

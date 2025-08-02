@@ -29,6 +29,10 @@ namespace TraeToDo
             {
                 ApiKeyPasswordBox.Password = apiKey;
             }
+            
+            // Load SOLO mode and interval settings
+            SoloModeToggle.IsOn = SettingsManager.Instance.GetSoloModeEnabled();
+            IntervalTextBox.Text = SettingsManager.Instance.GetSoloModeInterval().ToString();
         }
 
         /// <summary>
@@ -43,7 +47,7 @@ namespace TraeToDo
         }
 
         /// <summary>
-        /// Saves the API key to settings when the save button is clicked
+        /// Saves the API key and settings when the save button is clicked
         /// </summary>
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
@@ -55,11 +59,19 @@ namespace TraeToDo
                 return;
             }
             
-            // Save the API key
+            // Save all settings
             SettingsManager.Instance.SaveApiKey(apiKey);
+            SettingsManager.Instance.SaveSoloModeEnabled(SoloModeToggle.IsOn);
             
-            // Show success message
-            ShowStatus("API key saved successfully", true);
+            if (int.TryParse(IntervalTextBox.Text, out int interval) && interval > 0)
+            {
+                SettingsManager.Instance.SaveSoloModeInterval(interval);
+                ShowStatus("Settings saved successfully", true);
+            }
+            else
+            {
+                ShowStatus("Interval must be a positive number", false);
+            }
         }
         
         /// <summary>

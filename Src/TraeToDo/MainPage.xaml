@@ -15,20 +15,29 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <!-- Header -->
+        <!-- Header with Hamburger Menu -->
         <Grid Grid.Row="0" Background="#0078D7" Padding="12,8">
             <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
             
+            <Button x:Name="MenuButton" 
+                    Background="Transparent" 
+                    Foreground="White"
+                    Click="MenuButton_Click">
+                <FontIcon Glyph="&#xE700;"/>
+            </Button>
+            
             <TextBlock Text="DeepSeek Chat" 
+                       Grid.Column="1"
                        Foreground="White" 
                        FontSize="20" 
                        VerticalAlignment="Center"/>
             
             <Button x:Name="SettingsButton" 
-                    Grid.Column="1" 
+                    Grid.Column="2" 
                     Background="Transparent" 
                     Foreground="White"
                     Click="SettingsButton_Click">
@@ -41,7 +50,8 @@
                   Grid.Row="1" 
                   Padding="12,8" 
                   SelectionMode="None"
-                  ItemsSource="{x:Bind Messages}">
+                  ItemsSource="{x:Bind Messages}"
+                  Tapped="Message_Tapped">
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
                     <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
@@ -72,6 +82,23 @@
                                    HorizontalAlignment="Right"
                                    Margin="0,0,24,8"/>
                     </Grid>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+        
+        <ListView x:Name="TaskListView"
+                  Grid.Row="1"
+                  ItemsSource="{x:Bind Tasks}"
+                  Visibility="Collapsed"
+                  SelectionMode="Single">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Margin="12">
+                        <CheckBox IsChecked="{Binding IsCompleted, Mode=TwoWay}" 
+                                  Content="{Binding Description}"/>
+                        <TextBlock Text="{Binding FormattedCreatedAt}"
+                                   Style="{StaticResource TimestampTextStyle}"/>
+                    </StackPanel>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>

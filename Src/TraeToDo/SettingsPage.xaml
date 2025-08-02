@@ -22,8 +22,21 @@
             <TextBlock Text="Settings" Style="{StaticResource HeaderTextBlockStyle}" Margin="0,12,0,0"/>
         </StackPanel>
 
-        <!-- API Key Section -->
+        <!-- AI Settings Section -->
         <StackPanel Grid.Row="1" Margin="0,0,0,20">
+            <TextBlock Text="AI Settings" Style="{StaticResource SubtitleTextBlockStyle}" Margin="0,0,0,8"/>
+            
+            <!-- SOLO Mode Toggle -->
+            <ToggleSwitch x:Name="SoloModeToggle" Header="SOLO Mode" 
+                         OffContent="Disabled" OnContent="Enabled" 
+                         Margin="0,0,0,12"/>
+                          
+            <!-- Interval Setting -->
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
+                <TextBlock Text="Interval (minutes):" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                <TextBox x:Name="IntervalTextBox" Width="60" Text="5" InputScope="Number"/>
+            </StackPanel>
+            
             <TextBlock Text="OpenRouter API Key" Style="{StaticResource SubtitleTextBlockStyle}" Margin="0,0,0,8"/>
             <TextBlock Text="Enter your OpenRouter API key to use the DeepSeek model. You can get an API key from openrouter.ai" 
                        TextWrapping="Wrap" Margin="0,0,0,12"/>
@@ -44,7 +57,7 @@
                 <Run>TraeToDo is a simple chat application that uses the DeepSeek AI model via OpenRouter.</Run>
                 <LineBreak/>
                 <LineBreak/>
-                <Run>Version 1.0.0</Run>
+                <Run>Version 1.0.50</Run>
             </TextBlock>
         </StackPanel>
     </Grid>
