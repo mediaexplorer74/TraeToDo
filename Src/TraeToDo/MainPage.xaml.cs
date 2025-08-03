@@ -1,13 +1,16 @@
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 using TraeToDo.Models;
 using Windows.System;
+using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Popups;
 using Windows.UI.Xaml.Data;
+using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
 
 namespace TraeToDo
@@ -16,38 +19,48 @@ namespace TraeToDo
     /// Main page with chat interface
     /// </summary>
     public sealed partial class MainPage : Page
+{
+    public static MainPage Current { get; private set; }
+    
+    private const string MessagesKey = "SavedMessages";
+    private const string TasksKey = "SavedTasks";
+
+    // Current view mode (chat or tasks)
+    private bool _isTaskView = false;
+        
+    // Collection of chat messages
+    public ObservableCollection<ChatMessage> Messages { get; } = new ObservableCollection<ChatMessage>();
+        
+    // Collection of tasks
+    public ObservableCollection<TaskItem> Tasks { get; } = new ObservableCollection<TaskItem>();
+        
+    // Service for communicating with DeepSeek API
+    private readonly DeepSeekService _deepSeekService;
+        
+    // Flag to track if a request is in progress
+    private bool _isRequestInProgress = false;
+        
+    // Timer for automatic SOLO mode questions
+    private DispatcherTimer _soloModeTimer;
+    private int _lastQuestionIndex = 0;
+    private readonly string[] _soloQuestions = new[]
     {
-        // Current view mode (chat or tasks)
-        private bool _isTaskView = false;
+        "What task should I focus on right now?",
+        "What's something small I can accomplish in 15 minutes?",
+        "What's one task I've been procrastinating on?"
+    };
         
-        // Collection of chat messages
-        public ObservableCollection<ChatMessage> Messages { get; } = new ObservableCollection<ChatMessage>();
+    /// <summary>
+    /// Initializes the main page
+    /// </summary>
+    public MainPage()
+    {
+        Current = this;
+        this.InitializeComponent();
         
-        // Collection of tasks
-        public ObservableCollection<TaskItem> Tasks { get; } = new ObservableCollection<TaskItem>();
-        
-        // Service for communicating with DeepSeek API
-        private readonly DeepSeekService _deepSeekService;
-        
-        // Flag to track if a request is in progress
-        private bool _isRequestInProgress = false;
-        
-        // Timer for automatic SOLO mode questions
-        private DispatcherTimer _soloModeTimer;
-        private int _lastQuestionIndex = 0;
-        private readonly string[] _soloQuestions = new[]
-        {
-            "What task should I focus on right now?",
-            "What's something small I can accomplish in 15 minutes?",
-            "What's one task I've been procrastinating on?"
-        };
-        
-        /// <summary>
-        /// Initializes the main page
-        /// </summary>
-        public MainPage()
-        {
-            this.InitializeComponent();
+        // Load saved data
+        LoadMessages();
+        LoadTasks();
             
             // Initialize the DeepSeek service
             _deepSeekService = new DeepSeekService();
@@ -93,7 +106,7 @@ namespace TraeToDo
         /// <summary>
         /// Handles the menu button click to show navigation options
         /// </summary>
-        private async void MenuButton_Click(object sender, RoutedEventArgs e)
+        private void MenuButton_Click(object sender, RoutedEventArgs e)
         {
             var menu = new MenuFlyout();
             
@@ -121,27 +134,53 @@ namespace TraeToDo
             menu.ShowAt(MenuButton);
         }
 
+
+      
         /// <summary>
         /// Handles tapping on chat messages to add them as tasks
         /// </summary>
-        private async void Message_Tapped(object sender, TappedRoutedEventArgs e)
+        private async void Message_ItemClick(object sender, ItemClickEventArgs e)
         {
-            var message = (sender as ListView).SelectedItem as ChatMessage;
-            if (message != null && !message.IsUserMessage)
-            {
-                var task = new TaskItem(message.Content);
-                Tasks.Add(task);
+          var message = e.ClickedItem as ChatMessage;
+          if (message != null)
+          {
+            // Split response by newlines or numbered/bullet points
+            var content = message.Content;
 
-                if (_isTaskView)
+
+                //var tasksText = content.Split(new[] { "\n", "\r", "•", "-", "1.", "2.", "3." }, 
+                //    StringSplitOptions.RemoveEmptyEntries);
+                var tasksText = content.Split(new[] { 
+                    "•", "-", 
+                    "1.", "2.", "3.",
+                    "4.", "5.", "6.",
+                    "7.", "8.", "9.",
+                },
+                   StringSplitOptions.RemoveEmptyEntries);
+
+                foreach (var taskText in tasksText)
+            {
+                var cleanText = taskText.Trim();
+                if (!string.IsNullOrWhiteSpace(cleanText))
                 {
-                    TaskListView.ScrollIntoView(task);
-                }
-                else
-                {
-                    var dialog = new MessageDialog("Task added to your list!");
-                    await dialog.ShowAsync();
+                    var task = new TaskItem(cleanText);
+                    Tasks.Add(task);
+                
+                    if (_isTaskView)
+                    {
+                        TaskListView.ScrollIntoView(task);
+                    }
                 }
             }
+
+            SaveTasks();
+
+            if (!_isTaskView)
+            {
+                var dialog = new MessageDialog($"{tasksText.Length} tasks added to your list!");
+                await dialog.ShowAsync();
+            }
+          }
         }
 
         /// <summary>
@@ -150,6 +189,8 @@ namespace TraeToDo
         private async void SendButton_Click(object sender, RoutedEventArgs e)
         {
             await SendMessageAsync();
+
+            SaveMessages();
         }
         
         /// <summary>
@@ -161,6 +202,8 @@ namespace TraeToDo
             {
                 e.Handled = true;
                 await SendMessageAsync();
+
+                SaveMessages();
             }
         }
         
@@ -197,7 +240,8 @@ namespace TraeToDo
                 LoadingIndicator.Visibility = Visibility.Visible;
                 
                 // Send the message to the DeepSeek API
-                string response = await _deepSeekService.SendMessageAsync(messageText, new System.Collections.Generic.List<ChatMessage>(Messages));
+                string response = await _deepSeekService.SendMessageAsync(messageText, 
+                    new System.Collections.Generic.List<ChatMessage>(Messages));
                 
                 // Add the AI's response to the chat
                 var aiMessage = new ChatMessage(response, false);
@@ -222,6 +266,8 @@ namespace TraeToDo
                 
                 // Reset the request in progress flag
                 _isRequestInProgress = false;
+
+                SaveMessages();
             }
         }
         
@@ -232,28 +278,80 @@ namespace TraeToDo
         {
             Frame.Navigate(typeof(SettingsPage));
         }
-        
-        private async void SoloModeTimer_Tick(object sender, object e)
+
+        public void SaveMessages()
         {
-            if (Messages.Count > 0 && _isTaskView) 
-                return;
-                
-            // Cycle through questions
-            _lastQuestionIndex = (_lastQuestionIndex + 1) % _soloQuestions.Length;
-            var question = _soloQuestions[_lastQuestionIndex];
-            
-            // Add as user message
-            var userMessage = new ChatMessage(question, true);
-            Messages.Add(userMessage);
-            
-            // Get AI response
-            _isRequestInProgress = true;
-            try
+            var localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
+            localSettings.Values[MessagesKey] = string.Join("<|message|>", Messages.Select(m => $"{m.Content}<|isuser|>{m.IsUserMessage}"));           
+        }
+
+
+        public void SaveTasks()
+        {
+            var localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
+            localSettings.Values[TasksKey] = string.Join("<|task|>", Tasks.Select(t => t.Description));
+        }
+
+        private void LoadMessages()
+        {
+            var localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
+            if (localSettings.Values.ContainsKey(MessagesKey))
             {
-                var response = await _deepSeekService.GetResponseAsync(question, new System.Collections.Generic.List<ChatMessage>(Messages));
-                var aiMessage = new ChatMessage(response, false);
-                Messages.Add(aiMessage);
-                MessagesListView.ScrollIntoView(aiMessage);
+                var saved = localSettings.Values[MessagesKey] as string;
+                Messages.Clear();
+                foreach (var msg in saved.Split(new[] { "<|message|>" }, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    var parts = msg.Split(new[] { "<|isuser|>" }, StringSplitOptions.None);
+                    if (parts.Length == 2 && bool.TryParse(parts[1], out bool isUser))
+                        Messages.Add(new ChatMessage(parts[0], isUser));
+                }
+            }
+        }
+        
+        private void LoadTasks()
+        {
+            var localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
+            if (localSettings.Values.ContainsKey(TasksKey))
+            {
+                var saved = localSettings.Values[TasksKey] as string;
+                Tasks.Clear();
+                foreach (var task in saved.Split(new[] { "<|task|>" }, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    Tasks.Add(new TaskItem(task));
+                }
+            }
+        }
+        
+private async void SoloModeTimer_Tick(object sender, object e)
+{
+    if (Messages.Count > 0 && _isTaskView) 
+        return;
+        
+    string question;
+    
+    if (Messages.Count == 1) {
+        // First SOLO question
+        _lastQuestionIndex = (_lastQuestionIndex + 1) % _soloQuestions.Length;
+        question = _soloQuestions[_lastQuestionIndex];
+    }
+    else {
+        // Use last AI response to generate new question
+        var lastResponse = Messages.Last(m => !m.IsUserMessage);
+        question = $"Дай более развернутый ответ: {lastResponse.Content}";
+    }
+    
+    // Add as user message
+    var userMessage = new ChatMessage(question, true);
+    Messages.Add(userMessage);
+    
+    // Get AI response
+    _isRequestInProgress = true;
+    try
+    {
+        var response = await _deepSeekService.SendMessageAsync(question, new System.Collections.Generic.List<ChatMessage>(Messages));
+        var aiMessage = new ChatMessage(response, false);
+        Messages.Add(aiMessage);
+        MessagesListView.ScrollIntoView(aiMessage);
             }
             catch (Exception ex)
             {

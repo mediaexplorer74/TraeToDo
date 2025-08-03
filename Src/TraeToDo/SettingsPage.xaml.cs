@@ -1,4 +1,6 @@
 using System;
+using System.Linq;
+using System.Threading.Tasks;
 using TraeToDo.Models;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -11,9 +13,30 @@ namespace TraeToDo
     /// </summary>
     public sealed partial class SettingsPage : Page
     {
+        private const string MessagesKey = "SavedMessages";
+        private const string TasksKey = "SavedTasks";
+
         public SettingsPage()
         {
             this.InitializeComponent();
+        }
+
+        private void ClearChatButton_Click(object sender, RoutedEventArgs e)
+        {
+
+            var localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
+            localSettings.Values[MessagesKey] = string.Empty; // Clear saved messages
+
+            ShowStatus("Chat history cleared", true);
+        }
+
+        private void ClearTasksButton_Click(object sender, RoutedEventArgs e)
+        {
+
+            var localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
+            localSettings.Values[TasksKey] = string.Empty; // Clear saved tasks 
+
+            ShowStatus("Tasks cleared", true);
         }
 
         /// <summary>

@@ -30,7 +30,7 @@
                 <FontIcon Glyph="&#xE700;"/>
             </Button>
             
-            <TextBlock Text="DeepSeek Chat" 
+            <TextBlock Text="DeepSeek AI" 
                        Grid.Column="1"
                        Foreground="White" 
                        FontSize="20" 
@@ -51,7 +51,9 @@
                   Padding="12,8" 
                   SelectionMode="None"
                   ItemsSource="{x:Bind Messages}"
-                  Tapped="Message_Tapped">
+                  ItemClick="Message_ItemClick"
+                  IsItemClickEnabled="True"
+                 >
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
                     <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
@@ -135,7 +137,7 @@
             </Grid.ColumnDefinitions>
             
             <TextBox x:Name="MessageTextBox" 
-                     PlaceholderText="Type your message here..." 
+                     PlaceholderText="Type here..." 
                      KeyDown="MessageTextBox_KeyDown"
                      Margin="0,0,8,0"/>
             

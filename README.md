@@ -13,9 +13,10 @@ If you are also interested in this, trae-todo (try to generate, heh!) an applica
 *Note*: If you, like me, encounter a problem registering on the True website, just use some VPN client.
 
 ## Screenshot(s)
-![Windows 11 Desktop](Images/sshot01.png)
-![Windows 11 Desktop](Images/sshot02.png)
-![Windows 10 Mobile](Images/sshot03.png)
+![](Images/sshot01.png)
+![](Images/sshot02.png)
+![](Images/sshot03.png)
+![](Images/sshot04.png)
 
 ## Status
 - I realized "Deepseek Free Chat" via OpenRouter "web-api service" ; experimental TODO AI-list feature started "for/to dev" :)
@@ -49,6 +50,6 @@ So, look at Wiki: https://github.com/mediaexplorer74/TraeToDo/wiki/My-Dialogue-w
 As is. No support. RnD only. DIY.
 
 ## .
-[m][e] July, 2 2025
+[M][E] July, 3 2025
 
 ![Logo](Images/footer.png)

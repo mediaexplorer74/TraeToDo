@@ -13,6 +13,11 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
@@ -44,7 +49,7 @@
             <PasswordBox x:Name="ApiKeyPasswordBox" PlaceholderText="Enter your API key" Width="400" 
                          HorizontalAlignment="Left" Margin="0,0,0,12"/>
             
-            <Button x:Name="SaveButton" Content="Save API Key" Click="SaveButton_Click"
+            <Button x:Name="SaveButton" Content="Save settings" Click="SaveButton_Click"
                     Background="#0078D7" Foreground="White"/>
             
             <TextBlock x:Name="StatusTextBlock" Margin="0,12,0,0" Foreground="Green" Visibility="Collapsed"/>
@@ -52,13 +57,19 @@
 
         <!-- About Section -->
         <StackPanel Grid.Row="2" Margin="0,20,0,0">
-            <TextBlock Text="About" Style="{StaticResource SubtitleTextBlockStyle}" Margin="0,0,0,8"/>
+            <!--TextBlock Text="About" Style="{StaticResource SubtitleTextBlockStyle}" Margin="0,0,0,8"/>
             <TextBlock TextWrapping="Wrap">
                 <Run>TraeToDo is a simple chat application that uses the DeepSeek AI model via OpenRouter.</Run>
                 <LineBreak/>
                 <LineBreak/>
                 <Run>Version 1.0.50</Run>
-            </TextBlock>
+            </TextBlock-->
+            <Button x:Name="ClearChatButton" Content="Clear Chat" Click="ClearChatButton_Click"
+                    Margin="0,0,0,12" HorizontalAlignment="Left"/>
+
+            <Button x:Name="ClearTasksButton" Content="Clear Tasks" Click="ClearTasksButton_Click"
+                    Margin="0,0,0,12" HorizontalAlignment="Left"/>
+
         </StackPanel>
     </Grid>
 </Page>
