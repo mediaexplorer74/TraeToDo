@@ -17,6 +17,7 @@ If you are also interested in this, trae-todo (try to generate, heh!) an applica
 ![](Images/sshot02.png)
 ![](Images/sshot03.png)
 ![](Images/sshot04.png)
+![](Images/sshot05.png)
 
 ## Status
 - I realized "Deepseek Free Chat" via OpenRouter "web-api service" ; experimental TODO AI-list feature started "for/to dev" :)
@@ -30,7 +31,7 @@ So, look at Wiki: https://github.com/mediaexplorer74/TraeToDo/wiki/My-Dialogue-w
 ## Known problems 
 - Deepseek can't remember previous posts (sometimes or all times… idk yet)
 - Some Deepseek's answers are empty (free plan limits?)
-- XAML simplifications (no ai bubble aligment to left, for examle, and bad ui theme)
+- XAML simplifications (no ai bubble aligment to left, for example, and bad ui theme)
 
 ## ToDo
 - Support markdown/rich text in responses
