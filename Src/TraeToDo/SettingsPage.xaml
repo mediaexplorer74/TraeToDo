@@ -25,9 +25,8 @@
         <!-- Header -->
         <StackPanel Grid.Row="0" Margin="0,0,0,20">
             <Button x:Name="BackButton" Click="BackButton_Click" Style="{StaticResource NavigationBackButtonNormalStyle}"/>
-
-            <!--Style="{StaticResource HeaderTextBlockStyle}" -->
-                <TextBlock Text="Settings" Margin="0,12,0,0"/>
+            
+            <TextBlock Text="Settings" Style="{StaticResource HeaderTextBlockStyle}" Margin="0,12,0,0"/>
         </StackPanel>
 
         <!-- Status Bar (top, unified style) -->

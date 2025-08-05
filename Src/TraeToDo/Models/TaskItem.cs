@@ -86,6 +86,8 @@ namespace TraeToDo.Models
         }
 
         private bool _isCompleted;
+        public TaskItem ParentTask;
+
         public bool IsCompleted
         {
             get => _isCompleted;

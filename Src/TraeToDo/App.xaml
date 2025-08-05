@@ -13,13 +13,14 @@
                     <converters:BoolToHorizontalAlignmentConverter x:Key="BoolToHorizontalAlignmentConverter"/>
                     <converters:BoolToBrushConverter x:Key="BoolToBrushConverter"/>
                     <converters:BoolToForegroundConverter x:Key="BoolToForegroundConverter"/>
+                    <converters:BoolToTextDecorationsConverter x:Key="BoolToTextDecorationsConverter"/>
+                    <converters:TaskBoolToForegroundConverter x:Key="TaskForegroundConverter"/>
                     
                     <!-- Chat Bubble Styles -->
                     <Style x:Key="UserMessageStyle" TargetType="Border">
                         <Setter Property="Background" Value="#0078D7" />
                         <Setter Property="BorderBrush" Value="#0078D7" />
                         <Setter Property="BorderThickness" Value="1" />
-                        <Setter Property="CornerRadius" Value="8,8,0,8" />
                         <Setter Property="Padding" Value="12,8,12,8" />
                         <Setter Property="Margin" Value="40,4,12,4" />
                         <Setter Property="HorizontalAlignment" Value="Right" />
@@ -29,7 +30,6 @@
                         <Setter Property="Background" Value="#F0F0F0" />
                         <Setter Property="BorderBrush" Value="#E0E0E0" />
                         <Setter Property="BorderThickness" Value="1" />
-                        <Setter Property="CornerRadius" Value="8,8,8,0" />
                         <Setter Property="Padding" Value="12,8,12,8" />
                         <Setter Property="Margin" Value="12,4,40,4" />
                         <Setter Property="HorizontalAlignment" Value="Left" />

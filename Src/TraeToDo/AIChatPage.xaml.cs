@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using TraeToDo.Models;
+using TraeToDo.Services;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
@@ -327,25 +328,28 @@ namespace TraeToDo
                 tasks.Add(newTask);
                 await TraeToDo.Models.SettingsManager.Instance.SaveTasksToFileAsync(tasks);
                 if (checklist.Count > 0)
-                    ShowStatusBar($"Добавлена задача с чек-листом: {checklist.Count} пунктов", true);
+                    ShowStatus($"New task added. Sub-tasks (checklist): {checklist.Count}", true);
                 else
-                    ShowStatusBar($"Добавлена задача без чек-листа", true);
+                    ShowStatus($"New task added", true);
 
                 await SettingsManager.Instance.SaveMessagesToFileAsync(Messages);
             }
         }
 
-        private async void ShowStatusBar(string message, bool success)
+        private async void ShowStatus(string message, bool success)
         {
             StatusBar.Text = message;
-            StatusBar.Foreground = success ? new Windows.UI.Xaml.Media.SolidColorBrush(Windows.UI.Colors.Green) : new Windows.UI.Xaml.Media.SolidColorBrush(Windows.UI.Colors.Red);
+
+            StatusBar.Foreground = success 
+                ? new Windows.UI.Xaml.Media.SolidColorBrush(Windows.UI.Colors.Green) 
+                : new Windows.UI.Xaml.Media.SolidColorBrush(Windows.UI.Colors.Red);
+
             StatusBar.Visibility = Windows.UI.Xaml.Visibility.Visible;
             await System.Threading.Tasks.Task.Delay(2500);
             StatusBar.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
         }
 
-       
-
+      
 
         private void SettingsButton_Click(object sender, RoutedEventArgs e)
         {

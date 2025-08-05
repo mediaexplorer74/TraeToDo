@@ -13,8 +13,13 @@ If you are also interested in this, trae-todo (try to generate, heh!) an applica
 *Note*: If you, like me, encounter a problem registering on the True website, just use some VPN client.
 
 ## Screenshot(s)
-![](Images/sshot01.png)
-![](Images/sshot02.png)
+![Desktop](Images/sshot01.png)
+![Desktop](Images/sshot02.png)
+![Desktop](Images/sshot03.png)
+![Mobile](Images/sshot04.png)
+![Mobile](Images/sshot05.png)
+![Mobile](Images/sshot06.png)
+![Mobile](Images/sshot07.png)
 
 
 ## Status
@@ -28,15 +33,13 @@ I decided to share my dialogue with DeepSeek AI.. how to create Deepseek uwp app
 So, look at Wiki: https://github.com/mediaexplorer74/TraeToDo/wiki/My-Dialogue-with-Trae-AI-about-Deepseek%E2%80%90like-project-autogeneration
 
 ## Known problems 
-- Deepseek can't remember previous posts (sometimes or all times… idk yet)
-- Some Deepseek's answers are empty (free plan limits?)
-- Task list damaged (big problems with sub-tasks UI rendering!)
+- Strange task list (Clear tasks could be help... see Settings)
+- Huge / heavy chat (Clear chat could be help... see Settings) 
+- Some Deepseek's answers are shorted/empty (free plan limits... or app bugs?)
 
 ## ToDo
-- Fix Tasks list mode
 - Support markdown/rich text in responses
-- Switch Min. Win. OS build to 10240 (Hello, W10M Astoria!)
-- Fix Deepseek's null responses ("empty messages")
+- Try to switch Min. Win. OS build to 10240 (Hello, W10M Astoria!)
 - Try to add some cool multi-agent features (image creation, etc.)))
 - "Synth" this ai chat template with some multi-platform ToDo (use Uno, Xamarin Forms, or even MAUI...)))
 
@@ -51,6 +54,6 @@ So, look at Wiki: https://github.com/mediaexplorer74/TraeToDo/wiki/My-Dialogue-w
 As is. No support. RnD only. DIY.
 
 ## .
-[M][E] July, 3 2025
+[M][E] July, 5 2025
 
 ![Logo](Images/footer.png)

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using TraeToDo.Models;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -46,21 +47,38 @@ namespace TraeToDo
         {
             if (e.Key == Windows.System.VirtualKey.Enter && !string.IsNullOrWhiteSpace(TaskInputBox.Text))
             {
-                AddTask();
+                AddTaskButton_Click(sender, e);
             }
         }
 
-        private void AddTask()
+        private async void AddTask()
         {
-            var taskText = TaskInputBox.Text.Trim();
-            if (!string.IsNullOrWhiteSpace(taskText))
+            if (string.IsNullOrWhiteSpace(TaskInputBox.Text)) return;
+
+            try
             {
-                var newTask = new TaskItem(taskText);
-                newTask.PropertyChanged += Task_PropertyChanged;
-                Tasks.Add(newTask);
+                var task = new TaskItem
+                {
+                    Description = TaskInputBox.Text.Trim(),
+                    CreatedAt = DateTime.Now,
+                    IsCompleted = false
+                };
+
+                Tasks.Add(task);
                 TaskInputBox.Text = string.Empty;
-                SaveTasks();
-                ApplyFilter();
+                await SaveTasksAsync();
+                ShowStatus("Task added successfully!");
+                
+                // Auto-scroll to the new task
+                if (TaskListView.Items.Count > 0)
+                {
+                    var lastItem = TaskListView.Items[TaskListView.Items.Count - 1];
+                    TaskListView.ScrollIntoView(lastItem);
+                }
+            }
+            catch (Exception ex)
+            {
+                ShowStatus($"Error adding task: {ex.Message}", true);
             }
         }
 
@@ -85,67 +103,141 @@ namespace TraeToDo
             System.Diagnostics.Debug.WriteLine($"[TaskListPage] LoadTasksAsync: FilteredTasks.Count after ApplyFilter = {FilteredTasks.Count}");
         }
 
-        private async void SaveTasks()
+        private async System.Threading.Tasks.Task SaveTasksAsync()
         {
             await SettingsManager.Instance.SaveTasksToFileAsync(Tasks);
         }
 
-        private async void ShowStatusBar(string message, bool success = true)
+        private void ShowStatus(string message, bool isError = false)
         {
-            StatusBar.Text = message;
-            StatusBar.Foreground = success ? new Windows.UI.Xaml.Media.SolidColorBrush(Windows.UI.Colors.Green) : new Windows.UI.Xaml.Media.SolidColorBrush(Windows.UI.Colors.Red);
-            StatusBar.Visibility = Windows.UI.Xaml.Visibility.Visible;
-            await System.Threading.Tasks.Task.Delay(2500);
-            StatusBar.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+            try
+            {
+                Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+                {
+                    StatusBar.Visibility = Visibility.Visible;
+                    StatusBar.Background = isError ? 
+                        new Windows.UI.Xaml.Media.SolidColorBrush(Windows.UI.Color.FromArgb(255, 255, 235, 238)) : // Light Red
+                        new Windows.UI.Xaml.Media.SolidColorBrush(Windows.UI.Color.FromArgb(255, 227, 242, 253));  // Light Blue
+                    
+                    var statusText = StatusBar.FindName("StatusText") as TextBlock;
+                    if (statusText != null)
+                    {
+                        statusText.Text = message;
+                        statusText.Foreground = isError ? 
+                            new Windows.UI.Xaml.Media.SolidColorBrush(Windows.UI.Color.FromArgb(255, 198, 40, 40)) : // Dark Red
+                            new Windows.UI.Xaml.Media.SolidColorBrush(Windows.UI.Color.FromArgb(255, 13, 71, 161));  // Dark Blue
+                    }
+
+                    // Hide status after 3 seconds
+                    var timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(3) };
+                    timer.Tick += (s, e) =>
+                    {
+                        StatusBar.Visibility = Visibility.Collapsed;
+                        timer.Stop();
+                    };
+                    timer.Start();
+                });
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[TaskListPage] Error in ShowStatus: {ex}");
+            }
         }
 
-        private void CheckBox_Checked(object sender, RoutedEventArgs e)
+        private void TaskItem_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            if (sender is CheckBox checkBox && checkBox.DataContext is TaskItem task)
+            try
             {
-                task.CompletedAt = DateTime.Now;
-                SaveTasks();
-                // ApplyFilter будет вызван через PropertyChanged
+                if (e.OriginalSource is TextBlock || sender is Grid)
+                {
+                    var grid = sender as Grid;
+                    if (grid?.DataContext is TaskItem task)
+                    {
+                        ToggleTaskCompletion(task);
+                        e.Handled = true;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[TaskListPage] Error in TaskItem_Tapped: {ex}");
+            }
+        }
+
+        private void SubtaskItem_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            try
+            {
+                if (e.OriginalSource is TextBlock || sender is StackPanel)
+                {
+                    var panel = sender as StackPanel;
+                    if (panel?.DataContext is SubTaskItem subtask)
+                    {
+                        ToggleSubtaskCompletion(subtask);
+                        e.Handled = true;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[TaskListPage] Error in SubtaskItem_Tapped: {ex}");
+            }
+        }
+
+        private async void ToggleTaskCompletion(TaskItem task)
+        {
+            try
+            {
+                bool newState = !task.IsCompleted;
+                task.IsCompleted = newState;
+                task.CompletedAt = newState ? DateTime.Now : (DateTime?)null;
+                
+                // Update all subtasks to match the parent task's state
+                foreach (var subtask in task.Subtasks)
+                {
+                    subtask.IsCompleted = newState;
+                }
+
+                await SaveTasksAsync();
+                ShowStatus(newState ? "Task completed!" : "Task marked as incomplete");
+
+                // Apply filter if needed
                 bool hideCompleted = SettingsManager.Instance.GetHideCompletedTasks();
-                if (hideCompleted)
-                    ShowStatusBar("Задача выполнена и скрыта");
-                else
-                    ShowStatusBar("Задача выполнена");
+                if (hideCompleted && newState)
+                {
+                    ApplyFilter();
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[TaskListPage] Error in ToggleTaskCompletion: {ex}");
+                ShowStatus("Error updating task status", true);
             }
         }
 
-        private void CheckBox_Unchecked(object sender, RoutedEventArgs e)
+        private async void ToggleSubtaskCompletion(SubTaskItem subtask)
         {
-            if (sender is CheckBox checkBox && checkBox.DataContext is TaskItem task)
+            try
             {
-                task.CompletedAt = null;
-                SaveTasks();
-                // ApplyFilter будет вызван через PropertyChanged
-                ShowStatusBar("Задача возвращена в активные");
+                subtask.IsCompleted = !subtask.IsCompleted;
+                await SaveTasksAsync();
+                
+                // Check if all subtasks are completed to update parent task
+                if (subtask.ParentTask != null)
+                {
+                    bool allSubtasksCompleted = subtask.ParentTask.Subtasks.All(st => st.IsCompleted);
+                    if (subtask.ParentTask.IsCompleted != allSubtasksCompleted)
+                    {
+                        subtask.ParentTask.IsCompleted = allSubtasksCompleted;
+                        subtask.ParentTask.CompletedAt = allSubtasksCompleted ? DateTime.Now : (DateTime?)null;
+                        await SaveTasksAsync();
+                    }
+                }
             }
-        }
-
-        private void SubtaskCheckBox_Checked(object sender, RoutedEventArgs e)
-        {
-            if (sender is CheckBox checkBox && checkBox.DataContext is SubTaskItem subtask)
+            catch (Exception ex)
             {
-                subtask.IsCompleted = true;
-                SaveTasks();
-                bool hideCompleted = SettingsManager.Instance.GetHideCompletedTasks();
-                if (hideCompleted)
-                    ShowStatusBar("Подзадача выполнена и скрыта");
-                else
-                    ShowStatusBar("Подзадача выполнена");
-            }
-        }
-
-        private void SubtaskCheckBox_Unchecked(object sender, RoutedEventArgs e)
-        {
-            if (sender is CheckBox checkBox && checkBox.DataContext is SubTaskItem subtask)
-            {
-                subtask.IsCompleted = false;
-                SaveTasks();
-                ShowStatusBar("Подзадача возвращена в активные");
+                System.Diagnostics.Debug.WriteLine($"[TaskListPage] Error in ToggleSubtaskCompletion: {ex}");
+                ShowStatus("Error updating subtask status", true);
             }
         }
 

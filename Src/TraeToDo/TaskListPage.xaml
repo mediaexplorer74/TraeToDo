@@ -4,9 +4,15 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:TraeToDo.Models"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:converters="using:TraeToDo.Converters"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    
+    <Page.Resources>
+        <converters:BoolToTextDecorationsConverter x:Key="TextDecorationsConverter"/>
+        <converters:TaskBoolToForegroundConverter x:Key="TaskForegroundConverter"/>
+    </Page.Resources>
 
     <Grid>
         <Grid.RowDefinitions>
@@ -17,72 +23,95 @@
         </Grid.RowDefinitions>
 
         <!-- Header -->
-        <TextBlock Text="Tasks" 
-                   Grid.Row="0"
-                   Style="{StaticResource TitleTextBlockStyle}"
-                   Margin="24,12,24,12"/>
+        <Grid Grid.Row="0" Padding="12,8">
+            <TextBlock Text="Tasks" 
+                       Style="{StaticResource TitleTextBlockStyle}"/>
+        </Grid>
 
-        <!-- Status Bar (top, unified style) -->
-        <TextBlock x:Name="StatusBar"
-                   Grid.Row="1"
-                   Margin="24,0,24,6"
-                   Foreground="Green"
-                   Visibility="Collapsed"
-                   TextWrapping="WrapWholeWords"
-                   FontSize="14"/>
+        <!-- Status Bar -->
+        <Border x:Name="StatusBar"
+                Grid.Row="1"
+                Background="#E3F2FD"
+                Padding="12,8"
+                Margin="0,0,0,8"
+                Visibility="Collapsed">
+            <TextBlock x:Name="StatusText"
+                       Foreground="#0D47A1"
+                       TextWrapping="Wrap"
+                       FontSize="14"/>
+        </Border>
 
         <!-- Task List -->
         <ListView x:Name="TaskListView"
                   Grid.Row="2"
                   ItemsSource="{x:Bind FilteredTasks}"
-                  SelectionMode="Single"
-                  Margin="12,0,12,12">
+                  SelectionMode="None"
+                  Padding="12,0,12,12"
+                  Background="Transparent">
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                    <Setter Property="Padding" Value="0,4"/>
+                    <Setter Property="Background" Value="Transparent"/>
+                </Style>
+            </ListView.ItemContainerStyle>
+            
             <ListView.ItemTemplate>
                 <DataTemplate x:DataType="local:TaskItem">
-                    <StackPanel Margin="0,4">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="Auto"/>
-                            </Grid.ColumnDefinitions>
-                            <CheckBox IsChecked="{x:Bind IsCompleted, Mode=TwoWay}"
-                                      VerticalAlignment="Center"
-                                      Checked="CheckBox_Checked"
-                                      Unchecked="CheckBox_Unchecked"/>
+                    <StackPanel Margin="0,4" Background="White" Padding="12">
+                        <!-- Main Task -->
+                        <Grid Tapped="TaskItem_Tapped"
+                              Background="Transparent"
+                              Padding="8">
                             <TextBlock Text="{x:Bind Description}"
-                                       Grid.Column="1"
                                        VerticalAlignment="Center"
-                                       Margin="12,0,12,0"
                                        TextWrapping="Wrap"
-                                       TextTrimming="CharacterEllipsis"/>
-                            <TextBlock Text="{x:Bind FormattedCreatedAt}"
-                                       Grid.Column="2"
-                                       Style="{StaticResource CaptionTextBlockStyle}"
-                                       VerticalAlignment="Center"
-                                       Foreground="Gray"/>
+                                       FontSize="16"
+                                       TextDecorations="{Binding IsCompleted, Converter={StaticResource TextDecorationsConverter}}"
+                                       Foreground="{Binding IsCompleted, Converter={StaticResource TaskForegroundConverter}}"/>
                         </Grid>
-                        <!-- Subtasks checklist (flat, styled) -->
-                        <ItemsControl ItemsSource="{x:Bind Subtasks}">
+
+                        <!-- Subtasks -->
+                        <ItemsControl ItemsSource="{x:Bind Subtasks}" 
+                                     Margin="24,8,0,0"
+                                     Background="#F5F5F5"
+                                     Padding="8"
+                                     BorderThickness="1"
+                                     BorderBrush="#E0E0E0"
+                                     >
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate x:DataType="local:SubTaskItem">
-                                    <StackPanel Orientation="Horizontal" Margin="32,2,0,2">
-                                        <CheckBox IsChecked="{x:Bind IsCompleted, Mode=TwoWay}"/>
-                                        <TextBlock Text="{x:Bind Description}" Margin="8,0,0,0" TextWrapping="Wrap"
-                                                   FontSize="13" Foreground="Gray"/>
+                                    <StackPanel Orientation="Horizontal" 
+                                                Margin="0,4"
+                                                Tapped="SubtaskItem_Tapped"
+                                                DataContext="{Binding}">
+                                        <TextBlock Text="{x:Bind Description}" 
+                                                   VerticalAlignment="Center"
+                                                   TextWrapping="Wrap"
+                                                   FontSize="14"
+                                                   TextDecorations="{Binding IsCompleted, Converter={StaticResource TextDecorationsConverter}}"
+                                                   Foreground="{Binding IsCompleted, Converter={StaticResource TaskForegroundConverter}}"/>
                                     </StackPanel>
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
                         </ItemsControl>
+                        
+                        <!-- Task Metadata -->
+                        <TextBlock Text="{x:Bind FormattedCreatedAt}"
+                                   Margin="0,8,0,0"
+                                   Style="{StaticResource CaptionTextBlockStyle}"
+                                   Foreground="Gray"/>
                     </StackPanel>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
 
-        <!-- Add Task -->
-        <Grid Grid.Row="2" 
+        <!-- Add Task Panel (Fixed at bottom) -->
+        <Grid Grid.Row="3" 
+              Background="{ThemeResource SystemControlBackgroundChromeMediumBrush}"
               Padding="12"
-              Background="{ThemeResource SystemControlBackgroundChromeMediumBrush}">
+              BorderThickness="0,1,0,0"
+              BorderBrush="{ThemeResource SystemControlForegroundBaseLowBrush}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
@@ -91,13 +120,21 @@
             <TextBox x:Name="TaskInputBox" 
                      Grid.Column="0"
                      PlaceholderText="Add a new task..."
-                     Height="40"
-                     KeyDown="TaskInputBox_KeyDown"/>
+                     Height="44"
+                     KeyDown="TaskInputBox_KeyDown"
+                     VerticalAlignment="Center"
+                     BorderThickness="1"
+                     BorderBrush="{ThemeResource SystemControlForegroundBaseMediumLowBrush}"
+                     />
             
             <Button x:Name="AddTaskButton" 
                     Grid.Column="1" 
                     Content="Add" 
-                    Margin="8,0,0,0"
+                    Margin="12,0,0,0"
+                    Height="44"
+                    MinWidth="80"
+                    VerticalAlignment="Center"
+                    Style="{StaticResource AccentButtonStyle}"
                     Click="AddTaskButton_Click"/>
         </Grid>
     </Grid>

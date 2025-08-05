@@ -112,11 +112,12 @@
     </Compile>
     <Compile Include="Converters\ChatMessageConverter.cs" />
     <Compile Include="Converters\MessageConverters.cs" />
+    <Compile Include="Converters\TaskConverters.cs" />
     <Compile Include="TaskListPage.xaml.cs">
       <DependentUpon>TaskListPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Models\ChatMessage.cs" />
-    <Compile Include="Models\DeepSeekService.cs" />
+    <Compile Include="Services\DeepSeekService.cs" />
     <Compile Include="Models\SettingsManager.cs" />
     <Compile Include="Models\TaskItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

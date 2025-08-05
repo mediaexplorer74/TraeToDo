@@ -77,7 +77,6 @@
                 <ListView.ItemTemplate>
                     <DataTemplate x:DataType="models:ChatMessage">
                         <Border Background="{Binding IsUserMessage, Converter={StaticResource BoolToBrushConverter}}" 
-                                CornerRadius="8" 
                                 Padding="12"
                                 Margin="0,4">
                             <StackPanel>

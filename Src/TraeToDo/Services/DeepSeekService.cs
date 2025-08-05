@@ -4,9 +4,10 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using TraeToDo.Models;
 using Windows.Networking.NetworkOperators;
 
-namespace TraeToDo.Models
+namespace TraeToDo.Services
 {
     /// <summary>
     /// Service for communicating with the DeepSeek API via OpenRouter
@@ -14,18 +15,12 @@ namespace TraeToDo.Models
     public class DeepSeekService
     {
         // OpenRouter API endpoint compatible with DeepSeek API
-        private const string API_URL =
-            "https://openrouter.ai/api/v1/chat/completions";
-            //"https://js.puter.com/v2/chat/completions";
+        private const string API_URL =  "https://openrouter.ai/api/v1/chat/completions";
+          
 
         // The model to use
-        private const string MODEL_NAME =
-            //"openrouter:openai/gpt-4o-mini";
-            "deepseek/deepseek-r1:free";
-            //"qwen/qwen-2.5-coder-32b-instruct:free";
-            //"deepseek/deepseek-r1-0528:free";
-            //"z-ai/glm-4.5";
-
+        private const string MODEL_NAME = "deepseek/deepseek-r1:free";
+        
         // HttpClient for API requests
         private readonly HttpClient _httpClient;
         

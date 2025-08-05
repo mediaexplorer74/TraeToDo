@@ -22,22 +22,34 @@ namespace TraeToDo
             this.InitializeComponent();
         }
 
-        private void ClearChatButton_Click(object sender, RoutedEventArgs e)
+        private async void ClearChatButton_Click(object sender, RoutedEventArgs e)
         {
-
-            var localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
-            localSettings.Values[MessagesKey] = string.Empty; // Clear saved messages
-
-            ShowStatus("Chat history cleared", true);
+            try
+            {
+                // Clear chat messages from file storage
+                await SettingsManager.Instance.SaveMessagesToFileAsync(new System.Collections.ObjectModel.ObservableCollection<ChatMessage>());
+                ShowStatus("Chat history cleared", true);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[SettingsPage] Error clearing chat: {ex}");
+                ShowStatus("Error clearing chat history", false);
+            }
         }
 
-        private void ClearTasksButton_Click(object sender, RoutedEventArgs e)
+        private async void ClearTasksButton_Click(object sender, RoutedEventArgs e)
         {
-
-            var localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
-            localSettings.Values[TasksKey] = string.Empty; // Clear saved tasks 
-
-            ShowStatus("Tasks cleared", true);
+            try
+            {
+                // Clear tasks from file storage
+                await SettingsManager.Instance.SaveTasksToFileAsync(new System.Collections.ObjectModel.ObservableCollection<TaskItem>());
+                ShowStatus("Tasks cleared", true);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[SettingsPage] Error clearing tasks: {ex}");
+                ShowStatus("Error clearing tasks", false);
+            }
         }
 
         /// <summary>
