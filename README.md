@@ -1,4 +1,4 @@
-# TraeToDo 1.0.100 - main branch
+# TraeToDo 1.0.150 - main branch
 ![Logo](Images/logo.png)
 
 Experimental ai project (in alpha state). Simplest "Deepseek-like" UWP app created with (in) Trae Ai service for my old sweet Windows Family devices. 
