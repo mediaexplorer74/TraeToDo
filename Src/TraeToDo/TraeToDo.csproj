@@ -107,8 +107,13 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="MainPage.xaml.cs">
-      <DependentUpon>MainPage.xaml</DependentUpon>
+    <Compile Include="AIChatPage.xaml.cs">
+      <DependentUpon>AIChatPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Converters\ChatMessageConverter.cs" />
+    <Compile Include="Converters\MessageConverters.cs" />
+    <Compile Include="TaskListPage.xaml.cs">
+      <DependentUpon>TaskListPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Models\ChatMessage.cs" />
     <Compile Include="Models\DeepSeekService.cs" />
@@ -182,9 +187,13 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="MainPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
+    <Page Include="AIChatPage.xaml">
       <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="TaskListPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="SettingsPage.xaml">
       <SubType>Designer</SubType>

@@ -4,6 +4,7 @@ using Windows.ApplicationModel.Activation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
+using TraeToDo.Models;
 
 namespace TraeToDo
 {
@@ -53,10 +54,18 @@ namespace TraeToDo
             {
                 if (rootFrame.Content == null)
                 {
-                    // When the navigation stack isn't restored navigate to the first page,
-                    // configuring the new page by passing required information as a navigation
-                    // parameter
-                    rootFrame.Navigate(typeof(MainPage), e.Arguments);
+                    // Navigate to the selected start page based on user settings
+                    string startPage = SettingsManager.Instance.GetStartPage();
+                    
+                    if (startPage == "TaskList")
+                    {
+                        rootFrame.Navigate(typeof(TaskListPage), e.Arguments);
+                    }
+                    else
+                    {
+                        // Default to AIChatPage
+                        rootFrame.Navigate(typeof(AIChatPage), e.Arguments);
+                    }
                 }
                 // Ensure the current window is active
                 Window.Current.Activate();

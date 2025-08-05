@@ -2,12 +2,18 @@
     x:Class="TraeToDo.App"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:TraeToDo">
+    xmlns:local="using:TraeToDo"
+    xmlns:converters="using:TraeToDo.Converters">
 
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary>
+                    <!-- Value Converters -->
+                    <converters:BoolToHorizontalAlignmentConverter x:Key="BoolToHorizontalAlignmentConverter"/>
+                    <converters:BoolToBrushConverter x:Key="BoolToBrushConverter"/>
+                    <converters:BoolToForegroundConverter x:Key="BoolToForegroundConverter"/>
+                    
                     <!-- Chat Bubble Styles -->
                     <Style x:Key="UserMessageStyle" TargetType="Border">
                         <Setter Property="Background" Value="#0078D7" />

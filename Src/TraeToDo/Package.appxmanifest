@@ -9,12 +9,12 @@
   <Identity
     Name="ME.TraeToDoV1"
     Publisher="CN=Admin"
-    Version="1.0.50.0" />
+    Version="1.0.100.0" />
 
   <mp:PhoneIdentity PhoneProductId="b3e28f9a-f2d9-4b2a-b2e5-8d5e33a127c0" PhonePublisherId="00060031-0005-0500-0277-0005500085f2"/>
 
   <Properties>
-    <DisplayName>TraeToDo v1.0.50</DisplayName>
+    <DisplayName>TraeToDo v1.0.100</DisplayName>
     <PublisherDisplayName>Admin</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
@@ -32,7 +32,7 @@
       Executable="$targetnametoken$.exe"
       EntryPoint="TraeToDo.App">
       <uap:VisualElements
-        DisplayName="TraeToDo 1.0.50"
+        DisplayName="TraeToDo 1.0.100"
         Square150x150Logo="Assets\Square150x150Logo.png"
         Square44x44Logo="Assets\Square44x44Logo.png"
         Description="A DeepSeek AI chat application"

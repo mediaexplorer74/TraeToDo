@@ -13,6 +13,7 @@ namespace TraeToDo
     /// </summary>
     public sealed partial class SettingsPage : Page
     {
+        private string _previousPage = null;
         private const string MessagesKey = "SavedMessages";
         private const string TasksKey = "SavedTasks";
 
@@ -44,7 +45,15 @@ namespace TraeToDo
         /// </summary>
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
+            // Синхронизация состояния переключателя HideCompletedTasks
+            if (HideCompletedTasksToggle != null)
+                HideCompletedTasksToggle.IsOn = SettingsManager.Instance.GetHideCompletedTasks();
             base.OnNavigatedTo(e);
+            // Сохраняем параметр навигации (название предыдущей страницы)
+            if (e.Parameter is string prevPage)
+            {
+                _previousPage = prevPage;
+            }
             
             // Load the API key from settings
             string apiKey = SettingsManager.Instance.GetApiKey();
@@ -56,6 +65,17 @@ namespace TraeToDo
             // Load SOLO mode and interval settings
             SoloModeToggle.IsOn = SettingsManager.Instance.GetSoloModeEnabled();
             IntervalTextBox.Text = SettingsManager.Instance.GetSoloModeInterval().ToString();
+            
+            // Load the start page setting
+            string startPage = SettingsManager.Instance.GetStartPage();
+            if (startPage == "TaskList")
+            {
+                StartPageComboBox.SelectedIndex = 1;
+            }
+            else
+            {
+                StartPageComboBox.SelectedIndex = 0; // Default to AI Chat
+            }
         }
 
         /// <summary>
@@ -66,6 +86,17 @@ namespace TraeToDo
             if (Frame.CanGoBack)
             {
                 Frame.GoBack();
+            }
+            else if (!string.IsNullOrEmpty(_previousPage))
+            {
+                if (_previousPage == "AIChatPage")
+                {
+                    Frame.Navigate(typeof(AIChatPage));
+                }
+                else if (_previousPage == "TaskListPage")
+                {
+                    Frame.Navigate(typeof(TaskListPage));
+                }
             }
         }
 
@@ -85,6 +116,12 @@ namespace TraeToDo
             // Save all settings
             SettingsManager.Instance.SaveApiKey(apiKey);
             SettingsManager.Instance.SaveSoloModeEnabled(SoloModeToggle.IsOn);
+            
+            // Save the selected start page
+            if (StartPageComboBox.SelectedItem is ComboBoxItem selectedItem && selectedItem.Tag is string startPage)
+            {
+                SettingsManager.Instance.SaveStartPage(startPage);
+            }
             
             if (int.TryParse(IntervalTextBox.Text, out int interval) && interval > 0)
             {
@@ -109,6 +146,13 @@ namespace TraeToDo
                 new Windows.UI.Xaml.Media.SolidColorBrush(Windows.UI.Colors.Green) : 
                 new Windows.UI.Xaml.Media.SolidColorBrush(Windows.UI.Colors.Red);
             StatusTextBlock.Visibility = Visibility.Visible;
+        }
+        private void HideCompletedTasksToggle_Toggled(object sender, RoutedEventArgs e)
+        {
+            if (HideCompletedTasksToggle != null)
+            {
+                SettingsManager.Instance.SetHideCompletedTasks(HideCompletedTasksToggle.IsOn);
+            }
         }
     }
 }

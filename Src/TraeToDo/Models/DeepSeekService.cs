@@ -14,11 +14,18 @@ namespace TraeToDo.Models
     public class DeepSeekService
     {
         // OpenRouter API endpoint compatible with DeepSeek API
-        private const string API_URL = "https://openrouter.ai/api/v1/chat/completions";
+        private const string API_URL =
+            "https://openrouter.ai/api/v1/chat/completions";
+            //"https://js.puter.com/v2/chat/completions";
 
         // The model to use
-        private const string MODEL_NAME = "deepseek/deepseek-r1:free";
-        
+        private const string MODEL_NAME =
+            //"openrouter:openai/gpt-4o-mini";
+            "deepseek/deepseek-r1:free";
+            //"qwen/qwen-2.5-coder-32b-instruct:free";
+            //"deepseek/deepseek-r1-0528:free";
+            //"z-ai/glm-4.5";
+
         // HttpClient for API requests
         private readonly HttpClient _httpClient;
         
@@ -51,7 +58,8 @@ namespace TraeToDo.Models
                 _httpClient.DefaultRequestHeaders.Clear();
                 _httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {apiKey}");
                 _httpClient.DefaultRequestHeaders.Add("HTTP-Referer", "https://traetodo.app");
-                
+                //_httpClient.DefaultRequestHeaders.Add("X-Title", "TraeToDo");
+
                 // Convert conversation history to the format expected by the API
                 var messages = new List<object>();
                 

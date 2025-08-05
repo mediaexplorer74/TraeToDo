@@ -1,7 +1,7 @@
-# TraeToDo 1.0.50 - main branch
+# TraeToDo 1.0.100 - main branch
 ![Logo](Images/logo.png)
 
-Experimental ai project... simplest "Deepseek-like" UWP app created with (in) Trae Ai service for my old sweet Windows Family devices! ;) 
+Experimental ai project (in alpha state). Simplest "Deepseek-like" UWP app created with (in) Trae Ai service for my old sweet Windows Family devices. 
 
 _CAUTION_: this app is using a free model variant (ID is deepseek/deepseek-r1:free), then it will be limited to 10 requests per minute and 100 requests per day.
 
@@ -15,13 +15,12 @@ If you are also interested in this, trae-todo (try to generate, heh!) an applica
 ## Screenshot(s)
 ![](Images/sshot01.png)
 ![](Images/sshot02.png)
-![](Images/sshot03.png)
-![](Images/sshot04.png)
-![](Images/sshot05.png)
+
 
 ## Status
 - I realized "Deepseek Free Chat" via OpenRouter "web-api service" ; experimental TODO AI-list feature started "for/to dev" :)
-- Min. Win. OS build - 15063 (however, 10240 may be good too!))
+- Min. Win. OS build - 15063 
+- I started to improve UI ("chat bubbles", sub-tasks/checlists, etc.)
 - Draft / AI-generated proto / not for mainstream :)
 
 ## Wiki
@@ -31,9 +30,10 @@ So, look at Wiki: https://github.com/mediaexplorer74/TraeToDo/wiki/My-Dialogue-w
 ## Known problems 
 - Deepseek can't remember previous posts (sometimes or all times… idk yet)
 - Some Deepseek's answers are empty (free plan limits?)
-- XAML simplifications (no ai bubble aligment to left, for example, and bad ui theme)
+- Task list damaged (big problems with sub-tasks UI rendering!)
 
 ## ToDo
+- Fix Tasks list mode
 - Support markdown/rich text in responses
 - Switch Min. Win. OS build to 10240 (Hello, W10M Astoria!)
 - Fix Deepseek's null responses ("empty messages")
