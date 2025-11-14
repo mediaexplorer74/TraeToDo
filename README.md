@@ -19,7 +19,6 @@ If you are also interested in this, trae-todo (try to generate, heh!) an applica
 ![Mobile](Images/sshot04.png)
 ![Mobile](Images/sshot05.png)
 ![Mobile](Images/sshot06.png)
-![Mobile](Images/sshot07.png)
 
 
 ## Status
