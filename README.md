@@ -18,8 +18,6 @@ If you are also interested in this, trae-todo (try to generate, heh!) an applica
 ![Desktop](Images/sshot03.png)
 ![Mobile](Images/sshot04.png)
 ![Mobile](Images/sshot05.png)
-![Mobile](Images/sshot06.png)
-
 
 ## Status
 - I realized "AI Chat" via OpenRouter "web-api service" 
