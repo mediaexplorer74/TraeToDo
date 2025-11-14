@@ -16,6 +16,7 @@ namespace TraeToDo.Models
         private const string SOLO_MODE_ENABLED = "SoloModeEnabled";
         private const string SOLO_MODE_INTERVAL = "SoloModeInterval";
         private const string START_PAGE = "StartPage";
+        private const string MODEL_ID_SETTING = "ModelId";
 
         // Singleton instance
         private static SettingsManager _instance;
@@ -252,6 +253,31 @@ namespace TraeToDo.Models
         public void SetHideCompletedTasks(bool hide)
         {
             _localSettings.Values[HIDE_COMPLETED_TASKS] = hide;
+        }
+
+        public string GetModelId()
+        {
+            if (_localSettings.Values.ContainsKey(MODEL_ID_SETTING))
+            {
+                var value = _localSettings.Values[MODEL_ID_SETTING] as string;
+                if (!string.IsNullOrWhiteSpace(value))
+                {
+                    return value;
+                }
+            }
+            return "deepseek/deepseek-r1:free";
+        }
+
+        public void SaveModelId(string modelId)
+        {
+            if (string.IsNullOrWhiteSpace(modelId))
+            {
+                _localSettings.Values.Remove(MODEL_ID_SETTING);
+            }
+            else
+            {
+                _localSettings.Values[MODEL_ID_SETTING] = modelId;
+            }
         }
     }
 }

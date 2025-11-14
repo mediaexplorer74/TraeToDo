@@ -74,6 +74,12 @@ namespace TraeToDo
                 ApiKeyPasswordBox.Password = apiKey;
             }
             
+            // Load the model id from settings
+            if (ModelIdTextBox != null)
+            {
+                ModelIdTextBox.Text = SettingsManager.Instance.GetModelId();
+            }
+            
             // Load SOLO mode and interval settings
             SoloModeToggle.IsOn = SettingsManager.Instance.GetSoloModeEnabled();
             IntervalTextBox.Text = SettingsManager.Instance.GetSoloModeInterval().ToString();
@@ -118,6 +124,7 @@ namespace TraeToDo
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
             string apiKey = ApiKeyPasswordBox.Password.Trim();
+            string modelId = ModelIdTextBox.Text?.Trim();
             
             if (string.IsNullOrWhiteSpace(apiKey))
             {
@@ -128,6 +135,7 @@ namespace TraeToDo
             // Save all settings
             SettingsManager.Instance.SaveApiKey(apiKey);
             SettingsManager.Instance.SaveSoloModeEnabled(SoloModeToggle.IsOn);
+            SettingsManager.Instance.SaveModelId(modelId);
             
             // Save the selected start page
             if (StartPageComboBox.SelectedItem is ComboBoxItem selectedItem && selectedItem.Tag is string startPage)

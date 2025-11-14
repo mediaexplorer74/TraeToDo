@@ -1,4 +1,4 @@
-# TraeToDo 1.0.150 - main branch
+# TraeToDo 1.0.200 - main branch
 ![Logo](Images/logo.png)
 
 Experimental ai project (in alpha state). Simplest "Deepseek-like" UWP app created with (in) Trae Ai service for my old sweet Windows Family devices. 
@@ -23,10 +23,12 @@ If you are also interested in this, trae-todo (try to generate, heh!) an applica
 
 
 ## Status
-- I realized "Deepseek Free Chat" via OpenRouter "web-api service" ; experimental TODO AI-list feature started "for/to dev" :)
+- I realized "AI Chat" via OpenRouter "web-api service" 
+- I added experimental "TODO AI-list" feature started "for/to dev" :)
 - Min. Win. OS build - 15063 
 - I started to improve UI ("chat bubbles", sub-tasks/checlists, etc.)
 - Draft / AI-generated proto / not for mainstream :)
+- I added "Model id" field (look at Settings window) 
 
 ## Wiki
 I decided to share my dialogue with DeepSeek AI.. how to create Deepseek uwp app "template-prototype". ;)

@@ -18,9 +18,6 @@ namespace TraeToDo.Services
         private const string API_URL =  "https://openrouter.ai/api/v1/chat/completions";
           
 
-        // The model to use
-        private const string MODEL_NAME = "deepseek/deepseek-r1:free";
-        
         // HttpClient for API requests
         private readonly HttpClient _httpClient;
         
@@ -78,7 +75,7 @@ namespace TraeToDo.Services
                 // Create the request payload
                 var requestData = new
                 {
-                    model = MODEL_NAME,
+                    model = SettingsManager.Instance.GetModelId(),
                     messages = messages,
                     temperature = 0.7,
                     max_tokens = 1000
@@ -155,7 +152,7 @@ namespace TraeToDo.Services
                 // Create the request payload
                 var requestData = new
                 {
-                    model = MODEL_NAME,
+                    model = SettingsManager.Instance.GetModelId(),
                     messages = messages,
                     temperature = 0.7,
                     max_tokens = 1000
